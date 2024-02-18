@@ -75,15 +75,20 @@ def main():
             st.warning("Please select up to 4 elections.")
             selected_elections = selected_elections[:4]
         
+        # Sidebar filter for status
+        selected_status = st.sidebar.selectbox("Select Status", df['Voter_Status'].unique(), index=df['Voter_Status'].unique().tolist().index('ACT'))
+        
         # Filter dataframe based on selected filters
-        filtered_df = df[df['Race'].isin(selected_race) & df['Gender'].isin(selected_gender) & df['Age_Range'].isin(selected_age_ranges)]
+        filtered_df = df[df['Race'].isin(selected_race) & df['Gender'].isin(selected_gender) & df['Age_Range'].isin(selected_age_ranges) & (df['Voter_Status'] == selected_status)]
         
         # Display table for count breakdown by race, gender, and party
-        st.header("Voter Counts Race, Gender, and Party")
+        st.header("Voter Counts by Race, Gender, and Party")
         pivot_df = pd.pivot_table(filtered_df, index=['Race', 'Gender'], columns='Party', values='Voter_ID', aggfunc='count', fill_value=0)
+        pivot_df['Total'] = pivot_df.sum(axis=1)
         pivot_df_sorted = pivot_df.sort_index(level=[0, 1])  # Sort by Race and Gender
         st.table(pivot_df_sorted)
         st.write('<style>tr:hover {background-color: #5aclee;}</style>', unsafe_allow_html=True)
+        
         
         # Count of voters who voted in 0, 1, 2, 3, or all of the selected elections
         election_counts = {}
