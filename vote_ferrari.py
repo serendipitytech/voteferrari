@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import urllib.parse
 
 # Define S3 URL
 s3_url = "https://serendipitytech.s3.amazonaws.com/public/vote_ferrari_streamlit.txt"
@@ -61,6 +62,8 @@ def main():
         df['Age_Range'] = df['Age'].apply(categorize_age)
         
         # Sidebar filters
+        st.sidebar.subheader("Filters")
+        selected_status = st.sidebar.selectbox("Select Status", df['Voter_Status'].unique(), index=df['Voter_Status'].unique().tolist().index('ACT'))
         selected_race = st.sidebar.multiselect("Select Race", df['Race'].unique(), default=df['Race'].unique())
         selected_gender = st.sidebar.multiselect("Select Gender", df['Gender'].unique(), default=df['Gender'].unique())
         selected_age_ranges = st.sidebar.multiselect("Select Age Ranges", ["18-28", "29-40", "41-55", "56+"], default=["18-28", "29-40", "41-55", "56+"])
@@ -69,14 +72,8 @@ def main():
         date_columns = [col for col in df.columns if col[0].isdigit()]
         default_selection = ['11/08/2022_GEN', '11/03/2020_GEN', '08/23/2022_PRI', '08/18/2020_PRI']
         selected_elections = st.sidebar.multiselect("Select Elections (Max 4)", date_columns, default=default_selection, key="elections")
+        st.sidebar.write("This filter only applies to the voter history counts table")
         
-        # Limit selection to 4 elections
-        if len(selected_elections) > 4:
-            st.warning("Please select up to 4 elections.")
-            selected_elections = selected_elections[:4]
-        
-        # Sidebar filter for status
-        selected_status = st.sidebar.selectbox("Select Status", df['Voter_Status'].unique(), index=df['Voter_Status'].unique().tolist().index('ACT'))
         
         # Filter dataframe based on selected filters
         filtered_df = df[df['Race'].isin(selected_race) & df['Gender'].isin(selected_gender) & df['Age_Range'].isin(selected_age_ranges) & (df['Voter_Status'] == selected_status)]
