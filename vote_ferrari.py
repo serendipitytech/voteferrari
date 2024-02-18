@@ -34,7 +34,7 @@ def categorize_age(age):
     else:
         return "56+"
 
-@st.cache
+@st.cache_data(allow_output_mutation=True)
 def load_data():
     # Load data from S3 into a DataFrame
     try:
