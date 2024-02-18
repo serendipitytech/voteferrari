@@ -46,6 +46,7 @@ def load_data():
 
 def main():
     st.title("District 27 Voter Data")
+    st.subheader("If you are on mobile, tap the small arrow icon in the top left corner to open the filter options")
     
     # Load data
     df = load_data()
