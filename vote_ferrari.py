@@ -124,7 +124,7 @@ def calculate_voter_counts(df, selected_race=None, selected_sex=None, selected_p
 
 
 def load_data():
-    df = pd.read_csv('https://serendipitytech.s3.amazonaws.com/public/vote_ferrari_streamlit.txt', delimiter=',', low_memory=False)
+    df = pd.read_csv('https://serendipitytech.s3.amazonaws.com/deltona/deltona_voters_streamlit.txt', delimiter=',', low_memory=False)
     return df
 
 st.set_page_config(layout="wide")
